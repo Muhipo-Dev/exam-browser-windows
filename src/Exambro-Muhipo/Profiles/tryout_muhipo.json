@@ -1,0 +1,32 @@
+{
+  "examName": "Tryout Simulasi Ujian Mandiri - Muhipo",
+  "examDescription": "Profil simulasi ujian mandiri dengan durasi 60 menit",
+  "startUrl": "https://example.com/tryout",
+  "allowedDomains": [
+    "example.com",
+    "*.example.com"
+  ],
+  "allowedUrls": [],
+  "fullScreen": true,
+  "kioskMode": true,
+  "disableContextMenu": true,
+  "disableDevTools": true,
+  "disableNewWindows": true,
+  "disablePopups": true,
+  "allowClipboard": false,
+  "allowCopy": false,
+  "allowPaste": false,
+  "allowPrinting": false,
+  "allowDownloads": false,
+  "allowUploads": false,
+  "allowZoom": true,
+  "allowCamera": false,
+  "allowMicrophone": false,
+  "allowAudio": true,
+  "sessionTimeout": 60,
+  "requireFullscreen": true,
+  "exitPolicy": "AdminPasswordOnly",
+  "enforceHttps": true,
+  "clearCacheOnFinish": true,
+  "clearCookiesOnFinish": true
+}

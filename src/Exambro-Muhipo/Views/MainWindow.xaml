@@ -1,0 +1,82 @@
+<Window x:Class="ExambroMuhipo.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:ExambroMuhipo.ViewModels"
+        xmlns:views="clr-namespace:ExambroMuhipo.Views"
+        mc:Ignorable="d"
+        Title="{Binding WindowTitle}" 
+        Height="720" Width="1100"
+        MinHeight="600" MinWidth="850"
+        WindowStartupLocation="CenterScreen"
+        Background="#0B132B"
+        Icon="/Assets/AppIcon.ico">
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:HomeViewModel}">
+            <views:HomeView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ExamViewModel}">
+            <views:ExamView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AdminViewModel}">
+            <views:AdminView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+            <views:SettingsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AboutViewModel}">
+            <views:AboutView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:HelpViewModel}">
+            <views:HelpView />
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Custom Title Bar (Hidden in Exam/Kiosk Mode) -->
+            <RowDefinition Height="Auto"/>
+            <!-- Main Content Area -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Custom Top Bar (Only visible when NOT in Exam Mode) -->
+        <Border Grid.Row="0" x:Name="CustomTitleBar" Background="#0F172A" Height="36" BorderBrush="#1E293B" BorderThickness="0,0,0,1"
+                MouseLeftButtonDown="CustomTitleBar_MouseLeftButtonDown">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsExamModeActive}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Window Title & School Brand -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                    <Image Source="/Assets/SchoolLogo.png" Width="18" Height="18" Margin="0,0,8,0" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <TextBlock Text="Exambro-Muhipo" Foreground="#F8FAFC" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock Text="—" Foreground="#475569" Margin="6,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="SMA Muhammadiyah 1 Ponorogo" Foreground="#94A3B8" FontSize="11" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Developer Credit (replaces removed window control buttons) -->
+                <TextBlock Grid.Column="2" Text="Developed by Muhipo Dev" Foreground="#38BDF8" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,12,0"/>
+            </Grid>
+        </Border>
+
+        <!-- Active View Host -->
+        <ContentControl Grid.Row="1" Content="{Binding CurrentView}" />
+    </Grid>
+</Window>

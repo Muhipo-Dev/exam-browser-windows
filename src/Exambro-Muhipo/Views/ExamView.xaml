@@ -1,0 +1,132 @@
+<UserControl x:Class="ExambroMuhipo.Views.ExamView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:ExambroMuhipo.Views.Controls"
+             Background="#000000">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- 1. Main WebView2 Exam Canvas (Full Area) -->
+            <RowDefinition Height="*"/>
+            <!-- 2. Safe Exam Browser (SEB) Signature Bottom Taskbar Dock -->
+            <RowDefinition Height="44"/>
+        </Grid.RowDefinitions>
+
+        <!-- 1. Main WebView2 Container -->
+        <controls:WebViewHost Grid.Row="0" x:Name="ExamWebViewHost" />
+
+        <!-- Warning / Blocked Navigation Overlay Banner -->
+        <Border Grid.Row="0" Background="#B91C1C" CornerRadius="10" 
+                VerticalAlignment="Top" HorizontalAlignment="Center" 
+                Margin="0,16,0,0" Padding="18,10" BorderBrush="#FCA5A5" BorderThickness="1.5"
+                Visibility="{Binding IsBlockedBannerVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="20" Color="#000000" Opacity="0.75" ShadowDepth="6"/>
+            </Border.Effect>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="⚠️" FontSize="18" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="{Binding BlockedMessage}" Foreground="#FFFFFF" FontWeight="Bold" FontSize="12.5" TextWrapping="Wrap" MaxWidth="650" VerticalAlignment="Center"/>
+                <Button Grid.Column="2" Command="{Binding DismissBlockedBannerCommand}" Content="Tutup" 
+                        Background="#FFFFFF" Foreground="#991B1B" FontWeight="Bold" FontSize="11.5" 
+                        Padding="12,4" Margin="16,0,0,0" BorderThickness="0" Cursor="Hand">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- 2. SAFE EXAM BROWSER (SEB) SIGNATURE BOTTOM TASKBAR DOCK -->
+        <Border Grid.Row="1" Background="#0A1128" BorderBrush="#1E293B" BorderThickness="0,1.5,0,0" Padding="14,0">
+            <Grid VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left: School Emblem and Identity -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Image Source="/Assets/SchoolLogo.png" Width="24" Height="24" Margin="0,0,8,0" VerticalAlignment="Center" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <TextBlock Text="SMA Muhammadiyah 1 Ponorogo" Foreground="#F59E0B" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock Text="|" Foreground="#475569" Margin="8,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="Secure Browser Ujian" Foreground="#94A3B8" FontWeight="SemiBold" FontSize="11.5" VerticalAlignment="Center"/>
+                    <TextBlock Text="•" Foreground="#475569" Margin="8,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="Developed by Muhipo Dev" Foreground="#38BDF8" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Center: Live Digital Clock & Connection Status (No Countdown/Title) -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <!-- Real-time Clock -->
+                    <Border Background="#1E293B" CornerRadius="6" Padding="10,3" Margin="0,0,10,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🕒 " FontSize="11"/>
+                            <TextBlock Text="{Binding CurrentClockTime}" Foreground="#F8FAFC" FontSize="12" FontWeight="Bold" FontFamily="Consolas"/>
+                            <TextBlock Text=" WIB" Foreground="#94A3B8" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Status Text -->
+                    <Border Background="#1E293B" CornerRadius="6" Padding="10,3">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🌐 " FontSize="11"/>
+                            <TextBlock Text="{Binding BrowserStatusText}" Foreground="#38BDF8" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Right: SEB Controls (Zoom, Reload, Power/Lock Exit) -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Zoom Controls -->
+                    <Border Background="#1E293B" CornerRadius="6" Margin="0,0,8,0" BorderBrush="#334155" BorderThickness="1">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Command="{Binding ZoomOutCommand}" Content="-" Width="24" Height="26" Background="Transparent" Foreground="#CBD5E1" FontWeight="Bold" BorderThickness="0" Cursor="Hand"/>
+                            <Button Command="{Binding ResetZoomCommand}" Content="{Binding ZoomPercentText}" Height="26" Padding="6,0" Background="Transparent" Foreground="#94A3B8" FontSize="10" FontWeight="SemiBold" BorderThickness="0" Cursor="Hand"/>
+                            <Button Command="{Binding ZoomInCommand}" Content="+" Width="24" Height="26" Background="Transparent" Foreground="#CBD5E1" FontWeight="Bold" BorderThickness="0" Cursor="Hand"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Reload Button -->
+                    <Button Command="{Binding ReloadCommand}" 
+                            Background="#1E293B" Foreground="#CBD5E1" 
+                            Padding="10,5" Margin="0,0,8,0" 
+                            FontSize="11" FontWeight="SemiBold" BorderBrush="#334155" BorderThickness="1" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🔄 " FontSize="11"/>
+                            <TextBlock Text="Muat Ulang"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- SEB Signature Red Exit / Power Button (Hidden as requested; use Alt+F4 to exit) -->
+                    <Button Command="{Binding ExitExamCommand}" 
+                            Visibility="Collapsed"
+                            Background="#DC2626" Foreground="#FFFFFF" 
+                            Padding="12,5" FontSize="11.5" FontWeight="Bold" BorderThickness="0" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🔒 " FontSize="11"/>
+                            <TextBlock Text="Akhiri Ujian"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
