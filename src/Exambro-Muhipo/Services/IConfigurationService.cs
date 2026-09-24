@@ -16,6 +16,8 @@ public interface IConfigurationService
     void SaveConfiguration();
     bool VerifyAdminPassword(string plainPassword);
     void SetAdminPassword(string newPassword);
+    bool VerifyExitPassword(string plainPassword);
+    void SetExitPassword(string newPassword);
     ExamProfile LoadProfile(string filePath);
     void SaveProfile(ExamProfile profile, string filePath);
     void SetActiveProfile(ExamProfile profile, string filePath);

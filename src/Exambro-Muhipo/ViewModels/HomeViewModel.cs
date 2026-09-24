@@ -19,6 +19,7 @@ public class HomeViewModel : ViewModelBase
     private readonly IBrowserService _browserService;
     private readonly IApplicationStateManager _stateManager;
     private readonly Func<bool> _showAdminLoginDialog;
+    private readonly Func<bool> _showExitAuthorizationDialog;
     private readonly DispatcherTimer _clockTimer;
 
     public string AppName => "Exambro-Muhipo";
@@ -95,12 +96,14 @@ public class HomeViewModel : ViewModelBase
         IConfigurationService configService,
         IBrowserService browserService,
         IApplicationStateManager stateManager,
-        Func<bool> showAdminLoginDialog)
+        Func<bool> showAdminLoginDialog,
+        Func<bool> showExitAuthorizationDialog)
     {
         _configService = configService;
         _browserService = browserService;
         _stateManager = stateManager;
         _showAdminLoginDialog = showAdminLoginDialog;
+        _showExitAuthorizationDialog = showExitAuthorizationDialog;
 
         StartExamCommand = new RelayCommand(OnStartExam);
         OpenAdminCommand = new RelayCommand(OnOpenAdmin);
@@ -215,6 +218,9 @@ public class HomeViewModel : ViewModelBase
 
     private void OnExitApp()
     {
-        Application.Current.Shutdown();
+        if (_showExitAuthorizationDialog())
+        {
+            Application.Current.Shutdown();
+        }
     }
 }

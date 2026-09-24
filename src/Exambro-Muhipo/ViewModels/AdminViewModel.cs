@@ -100,7 +100,7 @@ public class AdminViewModel : ViewModelBase
         set => SetField(ref _isStatusError, value);
     }
 
-    // Ubah Password
+    // Ubah Password Admin
     private string _currentPasswordInput = string.Empty;
     public string CurrentPasswordInput
     {
@@ -122,6 +122,28 @@ public class AdminViewModel : ViewModelBase
         set => SetField(ref _confirmPasswordInput, value);
     }
 
+    // Ubah Password Keluar Aplikasi
+    private string _currentExitPasswordInput = string.Empty;
+    public string CurrentExitPasswordInput
+    {
+        get => _currentExitPasswordInput;
+        set => SetField(ref _currentExitPasswordInput, value);
+    }
+
+    private string _newExitPasswordInput = string.Empty;
+    public string NewExitPasswordInput
+    {
+        get => _newExitPasswordInput;
+        set => SetField(ref _newExitPasswordInput, value);
+    }
+
+    private string _confirmExitPasswordInput = string.Empty;
+    public string ConfirmExitPasswordInput
+    {
+        get => _confirmExitPasswordInput;
+        set => SetField(ref _confirmExitPasswordInput, value);
+    }
+
     public ObservableCollection<LogEntry> AuditLogs { get; } = new();
 
     // Commands
@@ -136,6 +158,7 @@ public class AdminViewModel : ViewModelBase
     public ICommand StartExamCommand { get; }
     public ICommand SetActiveProfileCommand { get; }
     public ICommand ChangePasswordCommand { get; }
+    public ICommand ChangeExitPasswordCommand { get; }
     public ICommand RefreshLogsCommand { get; }
     public ICommand BackToHomeCommand { get; }
     public ICommand ApplyLocalLanPresetCommand { get; }
@@ -171,6 +194,7 @@ public class AdminViewModel : ViewModelBase
         StartExamCommand = new RelayCommand(OnStartExam);
         SetActiveProfileCommand = new RelayCommand(OnSetActiveProfile);
         ChangePasswordCommand = new RelayCommand(OnChangePassword);
+        ChangeExitPasswordCommand = new RelayCommand(OnChangeExitPassword);
         RefreshLogsCommand = new RelayCommand(LoadAuditLogs);
         BackToHomeCommand = new RelayCommand(() => _stateManager.NavigateToHome());
 
@@ -613,11 +637,45 @@ public class AdminViewModel : ViewModelBase
             CurrentPasswordInput = string.Empty;
             NewPasswordInput = string.Empty;
             ConfirmPasswordInput = string.Empty;
-            ShowMessage("Password administrator berhasil diubah dan dienkripsi PBKDF2.", isError: false);
+            ShowMessage("Password administrator (Pengaturan Server) berhasil diubah dan dienkripsi PBKDF2.", isError: false);
         }
         catch (Exception ex)
         {
-            ShowMessage($"Gagal mengubah password: {ex.Message}", isError: true);
+            ShowMessage($"Gagal mengubah password admin: {ex.Message}", isError: true);
+        }
+    }
+
+    private void OnChangeExitPassword()
+    {
+        if (string.IsNullOrWhiteSpace(NewExitPasswordInput))
+        {
+            ShowMessage("Password keluar baru tidak boleh kosong.", isError: true);
+            return;
+        }
+
+        if (NewExitPasswordInput != ConfirmExitPasswordInput)
+        {
+            ShowMessage("Konfirmasi password keluar baru tidak cocok.", isError: true);
+            return;
+        }
+
+        if (!_configService.VerifyExitPassword(CurrentExitPasswordInput))
+        {
+            ShowMessage("Password keluar saat ini salah.", isError: true);
+            return;
+        }
+
+        try
+        {
+            _configService.SetExitPassword(NewExitPasswordInput);
+            CurrentExitPasswordInput = string.Empty;
+            NewExitPasswordInput = string.Empty;
+            ConfirmExitPasswordInput = string.Empty;
+            ShowMessage("Password keluar aplikasi berhasil diubah dan dienkripsi PBKDF2.", isError: false);
+        }
+        catch (Exception ex)
+        {
+            ShowMessage($"Gagal mengubah password keluar: {ex.Message}", isError: true);
         }
     }
 

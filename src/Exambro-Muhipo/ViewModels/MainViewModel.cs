@@ -22,6 +22,8 @@ public class MainViewModel : ViewModelBase
     private readonly INavigationPolicy _navigationPolicy;
     private readonly IApplicationStateManager _stateManager;
 
+    private readonly Func<bool> _showExitAuthorizationDialog;
+
     private ViewModelBase? _currentView;
     public ViewModelBase? CurrentView
     {
@@ -60,7 +62,7 @@ public class MainViewModel : ViewModelBase
         INavigationPolicy navigationPolicy,
         IApplicationStateManager stateManager,
         Func<bool> showAdminLoginDialog,
-        Func<bool> showAdminExitDialog)
+        Func<bool> showExitAuthorizationDialog)
     {
         _configService = configService;
         _logger = logger;
@@ -70,9 +72,10 @@ public class MainViewModel : ViewModelBase
         _profileManager = profileManager;
         _navigationPolicy = navigationPolicy;
         _stateManager = stateManager;
+        _showExitAuthorizationDialog = showExitAuthorizationDialog;
 
-        HomeVM = new HomeViewModel(_configService, _browserService, _stateManager, showAdminLoginDialog);
-        ExamVM = new ExamViewModel(_configService, _browserService, _sessionService, _kioskService, _stateManager, showAdminExitDialog);
+        HomeVM = new HomeViewModel(_configService, _browserService, _stateManager, showAdminLoginDialog, showExitAuthorizationDialog);
+        ExamVM = new ExamViewModel(_configService, _browserService, _sessionService, _kioskService, _stateManager, showExitAuthorizationDialog);
         AdminVM = new AdminViewModel(_configService, _profileManager, _logger, _stateManager, _navigationPolicy);
         SettingsVM = new SettingsViewModel(_configService, _stateManager);
         AboutVM = new AboutViewModel(_stateManager, _configService);
@@ -83,7 +86,7 @@ public class MainViewModel : ViewModelBase
 
         _stateManager.ViewChanged += OnViewChanged;
 
-        // View awal adalah Home
+        // View awal adalah Beranda (HomeView)
         CurrentView = HomeVM;
     }
 
@@ -141,10 +144,14 @@ public class MainViewModel : ViewModelBase
     {
         if (IsExamModeActive)
         {
-            _logger.LogWarning(AuditEventType.ExitDenied, "Upaya penutupan aplikasi langsung saat ujian aktif ditolak.");
+            _logger.LogWarning(AuditEventType.ExitDenied, "Upaya penutupan aplikasi langsung saat ujian aktif dialihkan ke otorisasi ujian.");
+            _ = ExamVM.OnRequestExitExamAsync();
             return;
         }
 
-        Application.Current.Shutdown();
+        if (_showExitAuthorizationDialog())
+        {
+            Application.Current.Shutdown();
+        }
     }
 }

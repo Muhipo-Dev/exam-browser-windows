@@ -45,6 +45,14 @@ public class ConfigurationTests : IDisposable
         Assert.Equal("SMA Muhammadiyah 1 Ponorogo", configService.Config.SchoolName);
         Assert.False(string.IsNullOrEmpty(configService.Config.AdminPasswordHash));
         Assert.False(string.IsNullOrEmpty(configService.Config.AdminPasswordSalt));
+        Assert.False(string.IsNullOrEmpty(configService.Config.ExitPasswordHash));
+        Assert.False(string.IsNullOrEmpty(configService.Config.ExitPasswordSalt));
+
+        // Default verification tests (Semua otorisasi menggunakan MUHIPO23)
+        Assert.True(configService.VerifyAdminPassword("MUHIPO23"));
+        Assert.True(configService.VerifyExitPassword("MUHIPO23"));
+        Assert.False(configService.VerifyAdminPassword("wrong"));
+        Assert.False(configService.VerifyExitPassword("wrong"));
     }
 
     [Fact]

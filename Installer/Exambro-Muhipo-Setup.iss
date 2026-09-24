@@ -4,7 +4,7 @@
 ; Mendukung Windows 7 SP1, Windows 8/8.1, Windows 10, dan Windows 11 (Dual-Engine: WebView2 & Native WebBrowser)
 
 #define MyAppName "Exambro-Muhipo"
-#define MyAppVersion "1.3.2-beta"
+#define MyAppVersion "1.3.6-beta"
 #define MyAppPublisher "Muhipo Dev"
 #define MyAppURL "https://muhipo.sch.id"
 #define MyAppExeName "Exambro-Muhipo.exe"

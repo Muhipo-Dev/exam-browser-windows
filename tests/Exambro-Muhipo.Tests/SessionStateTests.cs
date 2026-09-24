@@ -56,13 +56,13 @@ public class SessionStateTests : IDisposable
         Assert.Equal(ExamSessionStatus.Running, _sessionService.Status);
         Assert.Equal(profile.ExamName, _sessionService.CurrentProfile?.ExamName);
 
-        // Otorisasi keluar dengan password salah (default password "admin123")
+        // Otorisasi keluar dengan password salah
         bool exitFailed = await _sessionService.RequestExitSessionAsync("wrong_password");
         Assert.False(exitFailed);
         Assert.Equal(ExamSessionStatus.Running, _sessionService.Status);
 
-        // Otorisasi keluar dengan password benar
-        bool exitSuccess = await _sessionService.RequestExitSessionAsync("admin123");
+        // Otorisasi keluar dengan password benar (default exit password "MUHIPO23")
+        bool exitSuccess = await _sessionService.RequestExitSessionAsync("MUHIPO23");
         Assert.True(exitSuccess);
         Assert.Equal(ExamSessionStatus.Completed, _sessionService.Status);
     }

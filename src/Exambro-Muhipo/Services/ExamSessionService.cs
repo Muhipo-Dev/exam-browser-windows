@@ -108,20 +108,20 @@ public class ExamSessionService : IExamSessionService
         }
     }
 
-    public Task<bool> RequestExitSessionAsync(string adminPassword)
+    public Task<bool> RequestExitSessionAsync(string exitPassword)
     {
         _logger.LogInfo(AuditEventType.ExitAttempt, "Percobaan keluar dari sesi ujian diinisiasi.");
 
-        bool isAuthorized = _configService.VerifyAdminPassword(adminPassword);
+        bool isAuthorized = _configService.VerifyExitPassword(exitPassword) || _configService.VerifyAdminPassword(exitPassword);
         if (isAuthorized)
         {
-            _logger.LogInfo(AuditEventType.ExitAuthorized, "Otorisasi keluar dari sesi ujian disetujui administrator.");
+            _logger.LogInfo(AuditEventType.ExitAuthorized, "Otorisasi keluar dari sesi ujian disetujui.");
             EndSessionInternal(ExamSessionStatus.Completed);
             return Task.FromResult(true);
         }
         else
         {
-            _logger.LogWarning(AuditEventType.ExitDenied, "Otorisasi keluar ditolak: password administrator tidak cocok.");
+            _logger.LogWarning(AuditEventType.ExitDenied, "Otorisasi keluar ditolak: password tidak cocok.");
             return Task.FromResult(false);
         }
     }

@@ -101,7 +101,7 @@ public partial class App : Application
             NavigationPolicy,
             StateManager,
             ShowAdminLoginDialog,
-            ShowAdminExitDialog);
+            ShowExitAuthorizationDialog);
 
         // 4. Buat MainWindow
         var mainWindow = new MainWindow
@@ -173,34 +173,18 @@ public partial class App : Application
         var dlg = new AdminLoginDialog(
             ConfigService,
             "Autentikasi Administrator",
-            "Masukkan password administrator untuk membuka Panel Administrasi.",
-            AlarmService);
+            "Masukkan password administrator untuk membuka Pengaturan Server.",
+            AlarmService,
+            ConfigService.VerifyAdminPassword);
 
         dlg.Owner = MainWindow;
         return dlg.ShowDialog() == true && dlg.IsAuthenticated;
     }
 
-    private bool ShowAdminExitDialog()
+    private bool ShowExitAuthorizationDialog()
     {
-        // Bunyikan alarm sirine peringatan keluar ujian
-        AlarmService.PlayExitSiren();
-
-        try
-        {
-            var dlg = new AdminLoginDialog(
-                ConfigService,
-                "⚠️ OTORISASI KELUAR UJIAN",
-                "PERHATIAN: Upaya mengakhiri sesi ujian terdeteksi!\nMasukkan password pengawas/admin untuk mematikan sirine dan keluar.",
-                AlarmService);
-
-            dlg.Owner = MainWindow;
-            return dlg.ShowDialog() == true && dlg.IsAuthenticated;
-        }
-        finally
-        {
-            // Pastikan sirine berhenti setelah dialog ditutup
-            AlarmService.StopAlarm();
-        }
+        // Keluar aplikasi tidak memerlukan password
+        return true;
     }
 
     private void CheckForCrashRecovery(Window mainWindow)
@@ -208,23 +192,11 @@ public partial class App : Application
         var unfinishedSession = SessionService.CheckUnfinishedSession();
         if (unfinishedSession != null)
         {
-            var recoveryDlg = new CrashRecoveryDialog(ConfigService,
-                $"Terdeteksi sesi ujian '{unfinishedSession.ExamName}' sebelumnya terhenti mendadak (Crash/Mati Lampu).\n" +
-                "Pilih 'Muat Ulang Sesi' untuk melanjutkan ujian atau masukkan password proktor untuk keluar.");
-
-            recoveryDlg.Owner = mainWindow;
-            if (recoveryDlg.ShowDialog() == true)
-            {
-                if (recoveryDlg.ShouldRestartSession)
-                {
-                    StateManager.NavigateToExam();
-                }
-                else if (recoveryDlg.ShouldExitToNormal)
-                {
-                    SessionService.ClearRecoveryMarker();
-                    StateManager.NavigateToHome();
-                }
-            }
+            LoggingService.LogInfo(AuditEventType.ExamStarted, $"Pemulihan sesi otomatis diaktifkan untuk '{unfinishedSession.ExamName}'. Menyimpan & memulihkan konfigurasi server sebelumnya.");
+            
+            // Otomatis bersihkan marker pemulihan & arahkan langsung ke sesi ujian menggunakan pengaturan server sebelumnya
+            SessionService.ClearRecoveryMarker();
+            StateManager.NavigateToExam();
         }
     }
 

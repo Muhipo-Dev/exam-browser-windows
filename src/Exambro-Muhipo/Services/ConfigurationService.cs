@@ -67,10 +67,24 @@ public class ConfigurationService : IConfigurationService
             }
             else
             {
-                // Inisialisasi password default: "admin123" ber-hash aman
-                var (salt, hash) = PasswordHasher.HashPassword("admin123");
+                Config = new AppConfiguration();
+            }
+
+            // Inisialisasi password admin default jika belum ada: "MUHIPO23"
+            if (string.IsNullOrEmpty(Config.AdminPasswordHash) || string.IsNullOrEmpty(Config.AdminPasswordSalt))
+            {
+                var (salt, hash) = PasswordHasher.HashPassword("MUHIPO23");
                 Config.AdminPasswordSalt = salt;
                 Config.AdminPasswordHash = hash;
+                SaveConfiguration();
+            }
+
+            // Inisialisasi password exit default jika belum ada: "MUHIPO23"
+            if (string.IsNullOrEmpty(Config.ExitPasswordHash) || string.IsNullOrEmpty(Config.ExitPasswordSalt))
+            {
+                var (saltExit, hashExit) = PasswordHasher.HashPassword("MUHIPO23");
+                Config.ExitPasswordSalt = saltExit;
+                Config.ExitPasswordHash = hashExit;
                 SaveConfiguration();
             }
 
@@ -81,9 +95,12 @@ public class ConfigurationService : IConfigurationService
             _logger.LogError(AuditEventType.ConfigurationError, "Kesalahan saat memuat konfigurasi aplikasi.", exception: ex);
             // Fallback default
             Config = new AppConfiguration();
-            var (salt, hash) = PasswordHasher.HashPassword("admin123");
+            var (salt, hash) = PasswordHasher.HashPassword("MUHIPO23");
             Config.AdminPasswordSalt = salt;
             Config.AdminPasswordHash = hash;
+            var (saltExit, hashExit) = PasswordHasher.HashPassword("MUHIPO23");
+            Config.ExitPasswordSalt = saltExit;
+            Config.ExitPasswordHash = hashExit;
         }
 
         // Muat profil aktif
@@ -209,6 +226,32 @@ public class ConfigurationService : IConfigurationService
         Config.AdminPasswordHash = hash;
         SaveConfiguration();
         _logger.LogInfo(AuditEventType.ConfigurationLoaded, "Password administrator berhasil diperbarui.");
+    }
+
+    public bool VerifyExitPassword(string plainPassword)
+    {
+        bool isValid = PasswordHasher.VerifyPassword(plainPassword, Config.ExitPasswordSalt, Config.ExitPasswordHash);
+        if (isValid)
+        {
+            _logger.LogInfo(AuditEventType.ExitAuthorized, "Otorisasi keluar aplikasi berhasil disetujui.");
+        }
+        else
+        {
+            _logger.LogWarning(AuditEventType.ExitDenied, "Otorisasi keluar aplikasi ditolak: password salah.");
+        }
+        return isValid;
+    }
+
+    public void SetExitPassword(string newPassword)
+    {
+        if (string.IsNullOrWhiteSpace(newPassword))
+            throw new ArgumentException("Password keluar baru tidak boleh kosong.", nameof(newPassword));
+
+        var (salt, hash) = PasswordHasher.HashPassword(newPassword);
+        Config.ExitPasswordSalt = salt;
+        Config.ExitPasswordHash = hash;
+        SaveConfiguration();
+        _logger.LogInfo(AuditEventType.ConfigurationLoaded, "Password keluar aplikasi berhasil diperbarui.");
     }
 
     public ExamProfile LoadProfile(string filePath)

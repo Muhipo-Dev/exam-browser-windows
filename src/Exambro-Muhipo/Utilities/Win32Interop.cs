@@ -76,4 +76,12 @@ public static class Win32Interop
         const uint LLKHF_ALTDOWN = 0x20;
         return (flags & LLKHF_ALTDOWN) != 0;
     }
+
+    /// <summary>
+    /// Memeriksa apakah tombol Escape (Esc) sedang ditekan.
+    /// </summary>
+    public static bool IsEscPressed()
+    {
+        return (GetAsyncKeyState(VK_ESCAPE) & 0x8000) != 0;
+    }
 }

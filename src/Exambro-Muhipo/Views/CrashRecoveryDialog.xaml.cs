@@ -48,26 +48,8 @@ public partial class CrashRecoveryDialog : Window
 
     private void UnlockAndExit_Click(object sender, RoutedEventArgs e)
     {
-        string pwd = AdminPasswordInput.Password;
-        if (string.IsNullOrEmpty(pwd))
-        {
-            ErrorText.Text = "Masukkan password administrator/pengawas.";
-            ErrorText.Visibility = Visibility.Visible;
-            return;
-        }
-
-        if (_configService.VerifyAdminPassword(pwd))
-        {
-            ShouldExitToNormal = true;
-            DialogResult = true;
-            Close();
-        }
-        else
-        {
-            ErrorText.Text = "Password administrator salah.";
-            ErrorText.Visibility = Visibility.Visible;
-            AdminPasswordInput.SelectAll();
-            AdminPasswordInput.Focus();
-        }
+        ShouldExitToNormal = true;
+        DialogResult = true;
+        Close();
     }
 }

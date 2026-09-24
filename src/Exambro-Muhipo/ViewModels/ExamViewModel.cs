@@ -20,7 +20,7 @@ public class ExamViewModel : ViewModelBase
     private readonly IExamSessionService _sessionService;
     private readonly IKioskService _kioskService;
     private readonly IApplicationStateManager _stateManager;
-    private readonly Func<bool> _showAdminExitDialog;
+    private readonly Func<bool> _showExitAuthorizationDialog;
 
     public string SchoolName => "SMA Muhammadiyah 1 Ponorogo";
     public string ExamTitle => _sessionService.CurrentProfile?.ExamName ?? _configService.ActiveProfile.ExamName;
@@ -92,14 +92,14 @@ public class ExamViewModel : ViewModelBase
         IExamSessionService sessionService,
         IKioskService kioskService,
         IApplicationStateManager stateManager,
-        Func<bool> showAdminExitDialog)
+        Func<bool> showExitAuthorizationDialog)
     {
         _configService = configService;
         _browserService = browserService;
         _sessionService = sessionService;
         _kioskService = kioskService;
         _stateManager = stateManager;
-        _showAdminExitDialog = showAdminExitDialog;
+        _showExitAuthorizationDialog = showExitAuthorizationDialog;
 
         ExitExamCommand = new AsyncRelayCommand(OnRequestExitExamAsync);
         ReloadCommand = new RelayCommand(OnReload);
@@ -211,15 +211,15 @@ public class ExamViewModel : ViewModelBase
         _isHandlingExit = true;
         try
         {
-            // Panggil dialog otentikasi pengawas/admin
-            bool authorized = _showAdminExitDialog();
+            // Panggil dialog otorisasi keluar aplikasi (password MUHIPO23)
+            bool authorized = _showExitAuthorizationDialog();
             if (authorized)
             {
                 await ExitApplicationAsync();
             }
             else
             {
-                BlockedMessage = "PERINGATAN: Autentikasi pengawas gagal. Upaya keluar tidak sah telah dicatat di log audit.";
+                BlockedMessage = "PERINGATAN: Otorisasi keluar aplikasi dibatalkan / password salah. Sesi ujian dilanjutkan.";
                 IsBlockedBannerVisible = true;
             }
         }

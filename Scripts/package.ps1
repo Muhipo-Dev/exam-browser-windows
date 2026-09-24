@@ -73,11 +73,15 @@ if (-not $latest) {
 }
 
 $installerExe = $latest.FullName
-if ($installerExe -ne (Join-Path (Get-Location) "Output\$($latest.Name)")) {
-    Copy-Item -Force $installerExe "Output\$($latest.Name)"
+try {
+    if ($installerExe -ne (Join-Path (Get-Location) "Output\$($latest.Name)")) {
+        Copy-Item -Force $installerExe "Output\$($latest.Name)" -ErrorAction SilentlyContinue
+    }
+    Copy-Item -Force $installerExe "Installer\Output\$($latest.Name)" -ErrorAction SilentlyContinue
+    Copy-Item -Force $installerExe "$($latest.Name)" -ErrorAction SilentlyContinue
+} catch {
+    # Ignored if file in root is locked by explorer
 }
-Copy-Item -Force $installerExe "Installer\Output\$($latest.Name)"
-Copy-Item -Force $installerExe "$($latest.Name)"
 
 $targetFile = "Output\$($latest.Name)"
 $installerSizeMB = [Math]::Round((Get-Item $targetFile).Length / 1MB, 2)

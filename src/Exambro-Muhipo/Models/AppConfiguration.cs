@@ -17,13 +17,13 @@ public class AppConfiguration
     public string SchoolName { get; set; } = "SMA Muhammadiyah 1 Ponorogo";
 
     [JsonPropertyName("appVersion")]
-    public string AppVersion { get; set; } = "1.3.2-beta";
+    public string AppVersion { get; set; } = "1.3.6-beta";
 
     [JsonPropertyName("activeProfileFile")]
     public string ActiveProfileFile { get; set; } = "default_profile.json";
 
     /// <summary>
-    /// PBKDF2 salt dalam format Base64.
+    /// PBKDF2 salt dalam format Base64 untuk password admin.
     /// </summary>
     [JsonPropertyName("adminPasswordSalt")]
     public string AdminPasswordSalt { get; set; } = "";
@@ -33,6 +33,18 @@ public class AppConfiguration
     /// </summary>
     [JsonPropertyName("adminPasswordHash")]
     public string AdminPasswordHash { get; set; } = "";
+
+    /// <summary>
+    /// PBKDF2 salt dalam format Base64 untuk password keluar aplikasi.
+    /// </summary>
+    [JsonPropertyName("exitPasswordSalt")]
+    public string ExitPasswordSalt { get; set; } = "";
+
+    /// <summary>
+    /// PBKDF2 hash password keluar aplikasi dalam format Base64.
+    /// </summary>
+    [JsonPropertyName("exitPasswordHash")]
+    public string ExitPasswordHash { get; set; } = "";
 
     [JsonPropertyName("enableDetailedAuditLog")]
     public bool EnableDetailedAuditLog { get; set; } = true;

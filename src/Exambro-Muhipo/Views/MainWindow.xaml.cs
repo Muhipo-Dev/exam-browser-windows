@@ -66,11 +66,14 @@ public partial class MainWindow : Window
                 e.Handled = true;
             }
 
-            // Tangkap Alt + F4 di level WPF preview jika hook dilewati
+            // Tangkap Esc + Alt + F4 di level WPF preview jika hook dilewati
             if (e.Key == Key.System && e.SystemKey == Key.F4)
             {
                 e.Handled = true;
-                _ = mainVm.ExamVM.OnRequestExitExamAsync();
+                if (Keyboard.IsKeyDown(Key.Escape))
+                {
+                    _ = mainVm.ExamVM.OnRequestExitExamAsync();
+                }
             }
         }
     }

@@ -70,7 +70,7 @@
                         <TextBlock Text="Tombol Windows, Alt+Tab, dan shortcut aplikasi dinonaktifkan demi ketertiban ujian." FontSize="11.5" Foreground="#CBD5E1" Margin="0,0,0,8" TextWrapping="Wrap"/>
 
                         <TextBlock Text="4. Selesai Ujian:" FontSize="12" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,2"/>
-                        <TextBlock Text="Setelah mengirim jawaban, panggil pengawas untuk menutup dan keluar dari aplikasi." FontSize="11.5" Foreground="#CBD5E1" TextWrapping="Wrap"/>
+                        <TextBlock Text="Setelah mengirim jawaban di web CBT, tekan 'Alt + F4' atau tombol keluar untuk menutup aplikasi secara langsung." FontSize="11.5" Foreground="#CBD5E1" TextWrapping="Wrap"/>
                     </StackPanel>
                 </Border>
 
@@ -83,13 +83,13 @@
                         </StackPanel>
 
                         <TextBlock Text="1. Pengaturan IP Server Ujian:" FontSize="12" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,2"/>
-                        <TextBlock Text="Buka menu 'Pengaturan Server' (password default: admin123). Masukkan IP server ujian dan simpan." FontSize="11.5" Foreground="#CBD5E1" Margin="0,0,0,8" TextWrapping="Wrap"/>
+                        <TextBlock Text="Buka menu 'Pengaturan Server' dengan password administrator untuk mengubah alamat IP server ujian dan memilih konfigurasi." FontSize="11.5" Foreground="#CBD5E1" Margin="0,0,0,8" TextWrapping="Wrap"/>
 
-                        <TextBlock Text="2. Keluar Darurat (Emergency Exit):" FontSize="12" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,2"/>
-                        <TextBlock Text="Tekan 'Alt + F4' saat sesi ujian aktif, lalu masukkan password pengawas untuk keluar dengan aman." FontSize="11.5" Foreground="#CBD5E1" Margin="0,0,0,8" TextWrapping="Wrap"/>
+                        <TextBlock Text="2. Keluar Aplikasi:" FontSize="12" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,2"/>
+                        <TextBlock Text="Untuk menutup atau keluar dari aplikasi (baik dari Beranda maupun saat Ujian aktif via tombol Keluar / Alt + F4), dapat ditutup langsung tanpa perlu password." FontSize="11.5" Foreground="#CBD5E1" Margin="0,0,0,8" TextWrapping="Wrap"/>
 
-                        <TextBlock Text="3. Pemulihan Sesi (Crash Recovery):" FontSize="12" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,2"/>
-                        <TextBlock Text="Bila terjadi mati listrik / restart, aplikasi akan menawarkan pemulihan sesi ujian secara instan." FontSize="11.5" Foreground="#CBD5E1" TextWrapping="Wrap"/>
+                        <TextBlock Text="3. Pemulihan Sesi Otomatis (Auto Recovery):" FontSize="12" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,2"/>
+                        <TextBlock Text="Bila terjadi mati listrik atau aplikasi tertutup tidak sengaja, sistem secara otomatis memulihkan sesi ujian dan pengaturan server sebelumnya tanpa perlu otorisasi." FontSize="11.5" Foreground="#CBD5E1" TextWrapping="Wrap"/>
                     </StackPanel>
                 </Border>
             </Grid>

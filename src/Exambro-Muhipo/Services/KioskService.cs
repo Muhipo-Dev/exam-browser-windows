@@ -136,23 +136,32 @@ public class KioskService : IKioskService
                 return (IntPtr)1; // Blokir
             }
 
-            // 2. Alt+Tab, Alt+Esc
-            if (isAlt && (vk == Win32Interop.VK_TAB || vk == Win32Interop.VK_ESCAPE))
+            // 2. Alt+Tab, Alt+Esc (Kecuali jika kombinasi Esc + Alt + F4 ditekan)
+            bool isEsc = Win32Interop.IsEscPressed();
+            if (isAlt && vk == Win32Interop.VK_TAB)
             {
                 return (IntPtr)1; // Blokir
             }
 
-            // Shortcut Alt+F4 untuk keluar dari aplikasi (dikonfirmasi otorisasi pengawas)
+            // Shortcut ESC + ALT + F4 untuk keluar dari aplikasi (dikonfirmasi otorisasi)
             if (isAlt && vk == Win32Interop.VK_F4)
             {
-                if (wParam == (IntPtr)Win32Interop.WM_SYSKEYDOWN || wParam == (IntPtr)Win32Interop.WM_KEYDOWN)
+                if (isEsc)
                 {
-                    Application.Current?.Dispatcher?.BeginInvoke(new Action(() =>
+                    if (wParam == (IntPtr)Win32Interop.WM_SYSKEYDOWN || wParam == (IntPtr)Win32Interop.WM_KEYDOWN)
                     {
-                        AltF4Pressed?.Invoke();
-                    }));
+                        Application.Current?.Dispatcher?.BeginInvoke(new Action(() =>
+                        {
+                            AltF4Pressed?.Invoke();
+                        }));
+                    }
                 }
-                return (IntPtr)1; // Blokir default OS close agar alur konfirmasi dan pembersihan berjalan tertib
+                return (IntPtr)1; // Blokir default OS close
+            }
+
+            if (isAlt && vk == Win32Interop.VK_ESCAPE)
+            {
+                return (IntPtr)1; // Blokir Alt+Esc
             }
 
             // 3. Ctrl+Esc

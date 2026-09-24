@@ -8,6 +8,7 @@ public partial class AdminLoginDialog : Window
 {
     private readonly IConfigurationService _configService;
     private readonly IAlarmService? _alarmService;
+    private readonly Func<string, bool>? _customValidator;
 
     public bool IsAuthenticated { get; private set; }
 
@@ -15,11 +16,13 @@ public partial class AdminLoginDialog : Window
         IConfigurationService configService, 
         string title = "Autentikasi Administrator", 
         string message = "Masukkan password administrator untuk melanjutkan tindakan ini.",
-        IAlarmService? alarmService = null)
+        IAlarmService? alarmService = null,
+        Func<string, bool>? customValidator = null)
     {
         InitializeComponent();
         _configService = configService;
         _alarmService = alarmService;
+        _customValidator = customValidator;
 
         DialogTitleText.Text = title;
         DescriptionText.Text = message;
@@ -68,7 +71,11 @@ public partial class AdminLoginDialog : Window
             return;
         }
 
-        if (_configService.VerifyAdminPassword(entered))
+        bool isAuth = _customValidator != null 
+            ? _customValidator(entered) 
+            : _configService.VerifyAdminPassword(entered);
+
+        if (isAuth)
         {
             IsAuthenticated = true;
             DialogResult = true;

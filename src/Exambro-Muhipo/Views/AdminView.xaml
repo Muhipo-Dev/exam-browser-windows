@@ -133,30 +133,30 @@
                     </StackPanel>
                 </Border>
 
-                <!-- CARD 2: GANTI PASSWORD PENGAWAS / PROKTOR -->
-                <Border Background="#1E293B" CornerRadius="12" Padding="20,16" BorderBrush="#334155" BorderThickness="1">
+                <!-- CARD 2: GANTI PASSWORD ADMINISTRATOR & PASSWORD KELUAR -->
+                <Border Background="#1E293B" CornerRadius="12" Padding="20,16" Margin="0,0,0,14" BorderBrush="#334155" BorderThickness="1">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                             <TextBlock Text="🔒 " FontSize="16"/>
-                            <TextBlock Text="Keamanan &amp; Password Pengawas" FontSize="14" FontWeight="Bold" Foreground="#F59E0B" VerticalAlignment="Center"/>
+                            <TextBlock Text="Keamanan &amp; Password Administrator (Pengaturan Server)" FontSize="14" FontWeight="Bold" Foreground="#38BDF8" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <TextBlock Text="Password ini digunakan pengawas untuk membuka pengaturan server dan menutup aplikasi saat sesi ujian aktif (Alt + F4)." 
+                        <TextBlock Text="Password ini digunakan untuk membuka dan mengubah halaman Pengaturan Server." 
                                    Foreground="#94A3B8" FontSize="11.5" Margin="0,0,0,12"/>
 
                         <UniformGrid Columns="3" Margin="0,0,0,14">
                             <StackPanel Margin="0,0,8,0">
-                                <TextBlock Text="Password Saat Ini" Foreground="#CBD5E1" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                <TextBlock Text="Password Admin Saat Ini" Foreground="#CBD5E1" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,4"/>
                                 <TextBox Text="{Binding CurrentPasswordInput, UpdateSourceTrigger=PropertyChanged}" Background="#0F172A" Foreground="#FFFFFF" Padding="8,6" FontSize="12" BorderBrush="#475569"/>
                             </StackPanel>
 
                             <StackPanel Margin="4,0,4,0">
-                                <TextBlock Text="Password Baru" Foreground="#CBD5E1" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                <TextBlock Text="Password Admin Baru" Foreground="#CBD5E1" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,4"/>
                                 <TextBox Text="{Binding NewPasswordInput, UpdateSourceTrigger=PropertyChanged}" Background="#0F172A" Foreground="#FFFFFF" Padding="8,6" FontSize="12" BorderBrush="#475569"/>
                             </StackPanel>
 
                             <StackPanel Margin="8,0,0,0">
-                                <TextBlock Text="Konfirmasi Password Baru" Foreground="#CBD5E1" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                <TextBlock Text="Konfirmasi Password Admin Baru" Foreground="#CBD5E1" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,4"/>
                                 <TextBox Text="{Binding ConfirmPasswordInput, UpdateSourceTrigger=PropertyChanged}" Background="#0F172A" Foreground="#FFFFFF" Padding="8,6" FontSize="12" BorderBrush="#475569">
                                     <TextBox.InputBindings>
                                         <KeyBinding Key="Enter" Command="{Binding ChangePasswordCommand}"/>
@@ -166,12 +166,56 @@
                         </UniformGrid>
 
                         <Button Command="{Binding ChangePasswordCommand}" 
+                                Background="#2563EB" Foreground="#FFFFFF" 
+                                Padding="16,8" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" BorderThickness="0" Cursor="Hand">
+                            <Button.Resources><Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style></Button.Resources>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🔑 " FontSize="12"/>
+                                <TextBlock Text="Perbarui Password Pengaturan Server"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+                <!-- CARD 3: GANTI PASSWORD KELUAR APLIKASI -->
+                <Border Background="#1E293B" CornerRadius="12" Padding="20,16" BorderBrush="#334155" BorderThickness="1">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <TextBlock Text="🛡️ " FontSize="16"/>
+                            <TextBlock Text="Keamanan &amp; Password Keluar Aplikasi" FontSize="14" FontWeight="Bold" Foreground="#F59E0B" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <TextBlock Text="Password ini digunakan pengawas/proktor saat menutup atau keluar dari aplikasi." 
+                                   Foreground="#94A3B8" FontSize="11.5" Margin="0,0,0,12"/>
+
+                        <UniformGrid Columns="3" Margin="0,0,0,14">
+                            <StackPanel Margin="0,0,8,0">
+                                <TextBlock Text="Password Keluar Saat Ini" Foreground="#CBD5E1" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                <TextBox Text="{Binding CurrentExitPasswordInput, UpdateSourceTrigger=PropertyChanged}" Background="#0F172A" Foreground="#FFFFFF" Padding="8,6" FontSize="12" BorderBrush="#475569"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="4,0,4,0">
+                                <TextBlock Text="Password Keluar Baru" Foreground="#CBD5E1" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                <TextBox Text="{Binding NewExitPasswordInput, UpdateSourceTrigger=PropertyChanged}" Background="#0F172A" Foreground="#FFFFFF" Padding="8,6" FontSize="12" BorderBrush="#475569"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="8,0,0,0">
+                                <TextBlock Text="Konfirmasi Password Keluar Baru" Foreground="#CBD5E1" FontSize="11.5" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                <TextBox Text="{Binding ConfirmExitPasswordInput, UpdateSourceTrigger=PropertyChanged}" Background="#0F172A" Foreground="#FFFFFF" Padding="8,6" FontSize="12" BorderBrush="#475569">
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Key="Enter" Command="{Binding ChangeExitPasswordCommand}"/>
+                                    </TextBox.InputBindings>
+                                </TextBox>
+                            </StackPanel>
+                        </UniformGrid>
+
+                        <Button Command="{Binding ChangeExitPasswordCommand}" 
                                 Background="#D97706" Foreground="#FFFFFF" 
                                 Padding="16,8" HorizontalAlignment="Left" FontSize="12" FontWeight="Bold" BorderThickness="0" Cursor="Hand">
                             <Button.Resources><Style TargetType="Border"><Setter Property="CornerRadius" Value="6"/></Style></Button.Resources>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="🔑 " FontSize="12"/>
-                                <TextBlock Text="Perbarui Password Pengawas"/>
+                                <TextBlock Text="Perbarui Password Keluar Aplikasi"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
